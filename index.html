@@ -14,7 +14,6 @@
     body {
         /* background-color: #76a9e0; */
         background-color: #f3f3f3;
-        background-color: #f3f3f3;
         /* Full height */
         height: 100vh;
         /* Center and scale the image nicely */
@@ -25,7 +24,7 @@
         justify-content: center;
         position: relative;
     }
-    
+
     .menu {
         display: flex;
         width: 30em;
@@ -35,58 +34,79 @@
         font-size: 20px;
         font-family: 'Righteous', sans-serif;
     }
-    
+
     .center {
         margin: auto;
         margin-top: 200px;
     }
-    
+
     #header {
         font-family: 'Righteous', sans-serif;
         font-size: 3rem;
     }
-    
+
     h1,
     h2 {
         font-family: 'Righteous', sans-serif;
         color: azure;
     }
-    
+
     .book-list {
         margin-top: 50px;
         visibility: hidden;
     }
-    
+
     .paginate {
         display: flex;
     }
-    
+
     .paginate a {
         background: #e2e2e2;
         padding: 8px 15px;
         margin: 2px;
         text-decoration: none;
     }
-    
+
     .paginate a.current {
         background: #d5e6ff;
     }
-    
+
     .paginate a:hover {
         cursor: pointer;
         background: #6194e0;
         color: #fff;
     }
-    
+
     .grow {
         transition: 1s ease;
     }
-    
+
     .grow:hover {
         -webkit-transform: scale(1.2);
         -ms-transform: scale(1.2);
         transform: scale(1.2);
         transition: 1s ease;
+    }
+
+    .input-group {
+        display: flexbox;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .input-group button {
+        display: flexbox;
+        justify-content: space-around;
+        align-items: center;
+        width: 10em;
+        height: 3em;
+        background-color: rgb(31, 109, 255);
+        border-radius: 5px;
+        color: #fff;
+        letter-spacing: 1em;
+        font-size: 15px;
+        font-family: 'Righteous', sans-serif;
+        margin-left: 1em;
     }
 </style>
 
@@ -118,7 +138,7 @@
         <div class="book-list">
             <h2 class="text-center" style="color: #6194e0;">Search Result</h2>
             <!--A pagination div-->
-            <div id="demo" class="paginate" style="margin-bottom: 3em;">
+            <div class="paginate" style="margin-bottom: 3em;">
                 <a class="first" href="#">⟪</a>
                 <a class="current" href="#">1</a>
                 <a class="first" href="#">2</a>
@@ -222,7 +242,7 @@
             card element formatter
              */
             function formatOutput(bookImg, title, author, publisher, bookLink, bookIsbn) {
-                var viewUrl = 'book.html?isbn=' + bookIsbn; //constructing link for bookviewer
+                var viewUrl = 'book.html?isbn=' + bookIsbn;
                 var htmlCard = `
 
         <div class="col-lg-6 paginate" style="margin-bottom: 3em; display:flexbox;">
@@ -256,7 +276,7 @@
 
 
         /*
-        Function for the google sign-in button, following the google developer guides
+        Functions for the google sign-in button, following the google developer guides----------------------------------------------------------------
         */
 
         function onSuccess(googleUser) {
@@ -268,7 +288,7 @@
         }
 
         /*
-        The javascript from google developer guides for styling the google sign-in button
+        The javascript from google developer guides for styling the google sign-in button to Google specifications.
         */
         function renderButton() {
             gapi.signin2.render('onSignIn', {
@@ -283,7 +303,7 @@
         }
 
         /*
-        Function in attempt to initialize the google log-in authorization, following the google developer guides
+        Function in attempt to initialize the google log-in authorization, following the required google developer guides for the button to work properly.
         */
         function onSignIn(googleUser) {
             var profile = googleUser.getBasicProfile();
@@ -292,7 +312,34 @@
             console.log('Image URL: ' + profile.getImageUrl());
             console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
         }
+
+
+        /*
+        Required Google function from Google Developer Guides for the proper function of Google sign-in button
+        */
+
+        var request = gapi.client.drive.about.get({
+            'fields': 'user'
+        });
+
+        // Executing the API request.
+        request.execute(function(response) {
+            console.log(response);
+        });
+
+        var request = gapi.client.request({
+            'method': 'GET',
+            'path': '/drive/v3/about',
+            'params': {
+                'fields': 'user'
+            }
+        });
+        // Executing the API request.
+        request.execute(function(response) {
+            console.log(response);
+        });
     </script>
+    <!--These links are required for the Google sign-in function, calling the necessary Google JavaScript-->
     <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 </body>
