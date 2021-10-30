@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <!--The Meta tag from the Google developer guide, to use the Google sign in button.-->
     <meta name="google-signin-client_id" content="182398855057-151fahj8judkeu6cvmjdmjg734upnpq7.apps.googleusercontent.com">
     <title>Google Book API</title>
-    <link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
 </head>
 
 <!--All of the CSS for the website-->
@@ -32,7 +31,7 @@
         align-items: center;
         margin-top: .5em;
         font-size: 20px;
-        font-family: 'Righteous', sans-serif;
+        font-family: 'Lato', sans-serif;
     }
 
     .center {
@@ -41,13 +40,13 @@
     }
 
     #header {
-        font-family: 'Righteous', sans-serif;
+        font-family: 'Lato', sans-serif;
         font-size: 3rem;
     }
 
     h1,
     h2 {
-        font-family: 'Righteous', sans-serif;
+        font-family: 'Lato', sans-serif;
         color: azure;
     }
 
@@ -105,7 +104,7 @@
         color: #fff;
         letter-spacing: 1em;
         font-size: 15px;
-        font-family: 'Righteous', sans-serif;
+        font-family: 'Lato', sans-serif;
         margin-left: 1em;
     }
 </style>
@@ -127,16 +126,16 @@
             <div id="onSignIn"></div>
         </div>
         <div id="title" class="center">
-            <h1 id="header" class="text-center mt-5"><span style="color: rgb(31, 109, 255);">Google</span><span style="color: rgb(0, 182, 9);"> Book</span><span style="color: rgb(255, 208, 0);"> API</span></h1>
+            <h1 id="header" class="text-center mt-5" style="text-shadow: 2px 2px 2px #00000070;"><span style="color: rgb(31, 109, 255);">Google</span><span style="color: rgb(0, 182, 9);"> Book</span><span style="color: rgb(255, 208, 0);"> API</span></h1>
             <div class="row">
                 <div id="input" class="input-group mx-auto col-lg-6 col-md-8 col-sm-12">
-                    <input id="search-box" type="text" class="form-control" placeholder="Search Books!...">
+                    <input id="search-box" type="text" class="form-control" placeholder="Search a Google Book..">
                     <button id="search" class="btn btn-primary" onclick="">Search</button>
                 </div>
             </div>
         </div>
         <div class="book-list">
-            <h2 class="text-center" style="color: #6194e0;">Search Result</h2>
+            <h2 style="color: rgb(31, 109, 255);">Book Results</h2>
             <!--A pagination div-->
             <div class="paginate" style="margin-bottom: 3em;">
                 <a class="first" href="#">⟪</a>
@@ -158,27 +157,22 @@
 
     </div>
 
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" crossorigin="anonymous"></script>
     <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 
     <script>
         $(document).ready(function() {
-            var item, tile, author, publisher, bookLink, bookImg;
+            var item, title, author, publisher;
             var outputList = document.getElementById("list-output");
             var bookUrl = "https://www.googleapis.com/books/v1/volumes?q=modern%20web";
             var apiKey = "key=AIzaSyCbhFZ3fWVJpdEm8IgmxWOly5lH9SSpOiQ";
-            var placeHldr = '<img src="https://via.placeholder.com/150">';
             var searchData;
 
-            //listener for search button
+            //listener for the search button
             $("#search").click(function() {
                 outputList.innerHTML = "";
                 document.body.style.backgroundImage = "url('')";
                 searchData = $("#search-box").val();
-                //empty search input field
                 if (searchData === "" || searchData === null) {
                     displayError();
                 } else {
@@ -188,7 +182,7 @@
                         success: function(response) {
                             console.log(response)
                             if (response.totalItems === 0) {
-                                alert("no result!.. try again")
+                                alert("try again..")
                             } else {
                                 $("#title").animate({
                                     'margin-top': '5px'
@@ -198,7 +192,7 @@
                             }
                         },
                         error: function() {
-                            alert("Something went wrong.. <br>" + "Try again!");
+                            alert("Try again..");
                         }
                     });
                 }
@@ -206,7 +200,7 @@
             });
 
             /*
-             function to display result in index.html
+             function to display all the results for books
              */
             function displayResults(response) {
                 for (var i = 0; i < response.items.length; i += 2) {
@@ -239,7 +233,7 @@
 
 
             /*
-            card element formatter
+            card elements
              */
             function formatOutput(bookImg, title, author, publisher, bookLink, bookIsbn) {
                 var viewUrl = 'book.html?isbn=' + bookIsbn;
@@ -276,7 +270,7 @@
 
 
         /*
-        Functions for the google sign-in button, following the google developer guides----------------------------------------------------------------
+        Required functions for the google sign-in button, following the google developer guides----------------------------------------------------------------
         */
 
         function onSuccess(googleUser) {
