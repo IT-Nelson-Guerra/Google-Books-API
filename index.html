@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <!--The Meta tag from the Google developer guide, to use the Google sign in button.-->
+    <meta name="google-signin-client_id" content="182398855057-151fahj8judkeu6cvmjdmjg734upnpq7.apps.googleusercontent.com">
+    <title>Google Book API</title>
+    <link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
+</head>
+
+<!--All of the CSS for the website-->
+<style>
+    body {
+        /* background-color: #76a9e0; */
+        background-color: #f3f3f3;
+        background-color: #f3f3f3;
+        /* Full height */
+        height: 100vh;
+        /* Center and scale the image nicely */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        position: relative;
+    }
+    
+    .menu {
+        display: flex;
+        width: 30em;
+        justify-content: space-around;
+        align-items: center;
+        margin-top: .5em;
+        font-size: 20px;
+        font-family: 'Righteous', sans-serif;
+    }
+    
+    .center {
+        margin: auto;
+        margin-top: 200px;
+    }
+    
+    #header {
+        font-family: 'Righteous', sans-serif;
+        font-size: 3rem;
+    }
+    
+    h1,
+    h2 {
+        font-family: 'Righteous', sans-serif;
+        color: azure;
+    }
+    
+    .book-list {
+        margin-top: 50px;
+        visibility: hidden;
+    }
+    
+    .paginate {
+        display: flex;
+    }
+    
+    .paginate a {
+        background: #e2e2e2;
+        padding: 8px 15px;
+        margin: 2px;
+        text-decoration: none;
+    }
+    
+    .paginate a.current {
+        background: #d5e6ff;
+    }
+    
+    .paginate a:hover {
+        cursor: pointer;
+        background: #6194e0;
+        color: #fff;
+    }
+    
+    .grow {
+        transition: 1s ease;
+    }
+    
+    .grow:hover {
+        -webkit-transform: scale(1.2);
+        -ms-transform: scale(1.2);
+        transform: scale(1.2);
+        transition: 1s ease;
+    }
+</style>
+
+
+<body class="body-img">
+    <div class="container">
+        <div class="menu">
+            <div class="home-button grow">
+                <a href="index.html" style="color: rgb(31, 109, 255); text-decoration: none; letter-spacing: .3em;">Home</a>
+            </div>
+            <div class="home-button grow">
+                <a href="index.html" style="color: rgb(31, 109, 255); text-decoration: none; letter-spacing: .3em;">|</a>
+            </div>
+            <div class="bookshelf grow">
+                <a href="bookshelf.html" style="color: rgb(31, 109, 255); text-decoration: none; letter-spacing: .3em;">My Bookshelf</a>
+            </div>
+            <!--Google Button-->
+            <div id="onSignIn"></div>
+        </div>
+        <div id="title" class="center">
+            <h1 id="header" class="text-center mt-5"><span style="color: rgb(31, 109, 255);">Google</span><span style="color: rgb(0, 182, 9);"> Book</span><span style="color: rgb(255, 208, 0);"> API</span></h1>
+            <div class="row">
+                <div id="input" class="input-group mx-auto col-lg-6 col-md-8 col-sm-12">
+                    <input id="search-box" type="text" class="form-control" placeholder="Search Books!...">
+                    <button id="search" class="btn btn-primary" onclick="">Search</button>
+                </div>
+            </div>
+        </div>
+        <div class="book-list">
+            <h2 class="text-center" style="color: #6194e0;">Search Result</h2>
+            <!--A pagination div-->
+            <div id="demo" class="paginate" style="margin-bottom: 3em;">
+                <a class="first" href="#">⟪</a>
+                <a class="current" href="#">1</a>
+                <a class="first" href="#">2</a>
+                <a href="#">3</a>
+                <a class="last" href="#">⟫</a>
+            </div>
+            <div id="list-output" class="">
+                <div class="row">
+                    <!-- card  -->
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+
+    <script>
+        $(document).ready(function() {
+            var item, tile, author, publisher, bookLink, bookImg;
+            var outputList = document.getElementById("list-output");
+            var bookUrl = "https://www.googleapis.com/books/v1/volumes?q=modern%20web";
+            var apiKey = "key=AIzaSyCbhFZ3fWVJpdEm8IgmxWOly5lH9SSpOiQ";
+            var placeHldr = '<img src="https://via.placeholder.com/150">';
+            var searchData;
+
+            //listener for search button
+            $("#search").click(function() {
+                outputList.innerHTML = "";
+                document.body.style.backgroundImage = "url('')";
+                searchData = $("#search-box").val();
+                //empty search input field
+                if (searchData === "" || searchData === null) {
+                    displayError();
+                } else {
+                    $.ajax({
+                        url: bookUrl + searchData,
+                        dataType: "json",
+                        success: function(response) {
+                            console.log(response)
+                            if (response.totalItems === 0) {
+                                alert("no result!.. try again")
+                            } else {
+                                $("#title").animate({
+                                    'margin-top': '5px'
+                                }, 1000);
+                                $(".book-list").css("visibility", "visible");
+                                displayResults(response);
+                            }
+                        },
+                        error: function() {
+                            alert("Something went wrong.. <br>" + "Try again!");
+                        }
+                    });
+                }
+                $("#search-box").val("");
+            });
+
+            /*
+             function to display result in index.html
+             */
+            function displayResults(response) {
+                for (var i = 0; i < response.items.length; i += 2) {
+                    item = response.items[i];
+                    title1 = item.volumeInfo.title;
+                    author1 = item.volumeInfo.authors;
+                    publisher1 = item.volumeInfo.publisher;
+                    bookLink1 = item.volumeInfo.previewLink;
+                    bookIsbn = item.volumeInfo.industryIdentifiers[1].identifier
+                    bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr;
+
+                    item2 = response.items[i + 1];
+                    title2 = item2.volumeInfo.title;
+                    author2 = item2.volumeInfo.authors;
+                    publisher2 = item2.volumeInfo.publisher;
+                    bookLink2 = item2.volumeInfo.previewLink;
+                    bookIsbn2 = item2.volumeInfo.industryIdentifiers[1].identifier
+                    bookImg2 = (item2.volumeInfo.imageLinks) ? item2.volumeInfo.imageLinks.thumbnail : placeHldr;
+
+                    outputList.innerHTML += '<div class="row mt-4">' +
+                        formatOutput(bookImg1, title1, author1, publisher1, bookLink1, bookIsbn) +
+                        formatOutput(bookImg2, title2, author2, publisher2, bookLink2, bookIsbn2) +
+                        '</div>';
+
+                    console.log(outputList);
+                }
+            }
+
+
+
+
+            /*
+            card element formatter
+             */
+            function formatOutput(bookImg, title, author, publisher, bookLink, bookIsbn) {
+                var viewUrl = 'book.html?isbn=' + bookIsbn; //constructing link for bookviewer
+                var htmlCard = `
+
+        <div class="col-lg-6 paginate" style="margin-bottom: 3em; display:flexbox;">
+         <div class="card" style="justify-content:space-around;">
+           <div class="row no-gutters">
+             <div class="col-md-4">
+               <img src="${bookImg}" class="card-img" alt="...">
+             </div>
+             <div class="col-md-8">
+               <div class="card-body">
+                 <h5 class="card-title">${title}</h5>
+                 <p class="card-text">Author: ${author}</p>
+                 <p class="card-text">Publisher: ${publisher}</p>
+                 <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+      `
+                return htmlCard;
+            }
+
+            //handling error for empty search box
+            function displayError() {
+                alert("search term can not be empty!")
+            }
+
+        });
+
+
+
+        /*
+        Function for the google sign-in button, following the google developer guides
+        */
+
+        function onSuccess(googleUser) {
+            console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+        }
+
+        function onFailure(error) {
+            console.log(error);
+        }
+
+        /*
+        The javascript from google developer guides for styling the google sign-in button
+        */
+        function renderButton() {
+            gapi.signin2.render('onSignIn', {
+                'scope': 'profile email',
+                'width': 240,
+                'height': 50,
+                'longtitle': true,
+                'theme': 'dark',
+                'onsuccess': onSuccess,
+                'onfailure': onFailure
+            });
+        }
+
+        /*
+        Function in attempt to initialize the google log-in authorization, following the google developer guides
+        */
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        }
+    </script>
+    <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</body>
+
+</html>
