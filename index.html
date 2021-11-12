@@ -144,26 +144,84 @@
                 <a href="#">3</a>
                 <a class="last" href="#">⟫</a>
             </div>
-            <div id="list-output" class="">
-                <div class="row">
-                    <!-- card  -->
-
-
-                </div>
-
-            </div>
+            <div id="list-output"></div>
         </div>
-
-
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.js" crossorigin="anonymous"></script>
     <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 
     <script>
+        //using a personal API key and google API provided in the Milestone 2 to create a ready function.
+        //This function initiates the document with variables to use and display such item, title, author and publisher.
+        //variable search data is used for a function that will display all of the search results.
+        $(document).ready(function() {
+            var outputList = document.getElementById("list-output");
+            var bookUrl = "https://www.googleapis.com/books/v1/volumes?q=modern%20web";
+            var apiKey = "key=AIzaSyCbhFZ3fWVJpdEm8IgmxWOly5lH9SSpOiQ";
+            var searchData;
+
+            //listener for the search button that allows for the display of books after the search is done.
+            //The click function has an if-statement and uses AJAX that will trigger some events.. once the search button is clicked, the function works to display the data searched for.
+            $("#search").click(function() {
+                searchData = $("#search-box").val();
+                if (searchData) {
+                    $.ajax({
+                        url: bookUrl + searchData,
+                        dataType: "json",
+                        success: function(response) {
+                            if (response.totalItems) {
+                                $(".book-list").css("visibility", "visible");
+                                displayResults(response);
+                            }
+                        }
+                    });
+                }
+            });
+
+            //function to display all the results for books and a for-loop to properly display the API array of the book's information.
+            function displayResults(response) {
+                for (var i = 0; i < response.items.length; i += 1) {
+                    item = response.items[i];
+                    ti1 = item.volumeInfo.title;
+                    aut1 = item.volumeInfo.authors;
+                    pub1 = item.volumeInfo.publisher;
+                    bImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHldr;
+                    outputList.innerHTML += '<div class="row md-4">' +
+                        formatOutput(bImg1, ti1, aut1, pub1) + '</div>';
+                    console.log(outputList);
+                }
+            }
+
+            //HTML divs to format the display results of each book using template literals.
+            function formatOutput(bImg, ti, aut, pub, bLink, bIsbn) {
+                var htmlCard =
+                    `<div class="col-lg-6 paginate" style="margin-bottom: 3em; display:flexbox;">
+                    <div style="justify-content:space-around;">
+
+                    <div class="col-md-4">
+                    <img src="${bImg}" class="card-img" alt="">
+                    </div>
+
+                    <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">${ti}</h5>
+                        <p class="card-text">Author: ${aut}</p>
+                        <p class="card-text">Publisher: ${pub}</p>
+                        <a target="_blank" class="btn btn-secondary">Read Book</a>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                `
+                return htmlCard;
+            }
+        });
+
+
         /*
-                                                                Required functions for the google sign-in button, following the google developer guides----------------------------------------------------------------
-                                                                */
+        Required functions for the google sign-in button, following the google developer guides----------------------------------------------------------------
+        */
 
         function onSuccess(googleUser) {
             console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
