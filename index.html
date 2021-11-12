@@ -180,6 +180,7 @@
             });
 
             //function to display all the results for books and a for-loop to properly display the API array of the book's information.
+             //each variable is equal to the corresponding list item of the API array for the books.
             function displayResults(response) {
                 for (var i = 0; i < response.items.length; i += 1) {
                     item = response.items[i];
