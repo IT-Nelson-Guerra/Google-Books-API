@@ -161,18 +161,9 @@
     <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 
     <script>
-        $(document).ready(function() {
-            var item, title, author, publisher;
-            var outputList = document.getElementById("list-output");
-            var bookUrl = "https://www.googleapis.com/books/v1/volumes?q=modern%20web";
-            var apiKey = "key=AIzaSyCbhFZ3fWVJpdEm8IgmxWOly5lH9SSpOiQ";
-            var searchData;
-
-
-
         /*
-        Required functions for the google sign-in button, following the google developer guides----------------------------------------------------------------
-        */
+                                                                Required functions for the google sign-in button, following the google developer guides----------------------------------------------------------------
+                                                                */
 
         function onSuccess(googleUser) {
             console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
